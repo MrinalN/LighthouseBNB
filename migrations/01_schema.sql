@@ -13,6 +13,8 @@ CREATE TABLE users (
 
 CREATE TABLE properties (
   id SERIAL PRIMARY KEY NOT NULL,
+  owner_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+
   title VARCHAR(225) NOT NULL,
   description TEXT,
   thumbnail_photo_url VARCHAR(225) NOT NULL,
@@ -22,18 +24,17 @@ CREATE TABLE properties (
   number_of_bedrooms INTEGER NOT NULL DEFAULT 0,
   number_of_bathrooms INTEGER NOT NULL DEFAULT 0,
 
+  country VARCHAR(225) NOT NULL,
   street VARCHAR(225) NOT NULL,
   city VARCHAR(225) NOT NULL,
   province VARCHAR(225) NOT NULL,
-  country VARCHAR(225) NOT NULL,
   post_code VARCHAR(225) NOT NULL,
-  active BOOLEAN NOT NULL DEFAULT TRUE,
-
-  owner_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+  active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE reservations (
   id SERIAL PRIMARY KEY NOT NULL,
+
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
 
@@ -43,10 +44,10 @@ CREATE TABLE reservations (
 
 CREATE TABLE property_reviews (
   id SERIAL PRIMARY KEY NOT NULL,
-  rating SMALLINT NOT NULL DEFAULT 0,
-  message TEXT,
-
-  reservation_id INTEGER REFERENCES reservations(id) ON DELETE CASCADE,
   guest_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  property_id INTEGER REFERENCES properties(id) ON DELETE CASCADE
+  property_id INTEGER REFERENCES properties(id) ON DELETE CASCADE,
+  reservation_id INTEGER REFERENCES reservations(id) ON DELETE CASCADE,
+
+  rating SMALLINT NOT NULL DEFAULT 0,
+  message TEXT
 );
